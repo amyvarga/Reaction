@@ -1,8 +1,8 @@
 import React from 'react';
 import { useAppContext } from '../hooks/useAppContext';
-import { useValidator } from '../hooks/useValidator';
+import { useValidateControl } from '../hooks/useValidateControl';
 import { setUsername, setFormControlValue } from '../../state/actions';
-import { VALIDATION_SCHEMA } from '../validationSchema';
+
 
 function SetUserName() {
   const { dispatch,
@@ -12,9 +12,10 @@ function SetUserName() {
       } }
     }
   } = useAppContext();
+
   const formId = 'formUsername';
 
-  const { validate } = useValidator();
+  const { validateControl } = useValidateControl();
 
   const successCallback = (value) => {
     dispatch(setUsername(value));
@@ -28,29 +29,15 @@ function SetUserName() {
       controlId: id,
       value: value
     }));
-    validateControl(id, value);
+    validateControl(id, value, formId);
     successCallback(value === "" ? 'anonymous' : value);
-  };
-
-  const validateControl = (id, value) => {
-    const fieldSchema = VALIDATION_SCHEMA.find(element => element[id]);
-    const rules = Object.keys(fieldSchema[id]);
-    for (let rule of rules) {
-      const isValid = validate({
-        formId,
-        controlId: id,
-        value: value,
-        rule: rule
-      });
-      if (isValid === false) return;
-    }
   };
 
   return (
     <div>
       <h3>Create username?</h3>
       <div className="field">
-        <label>User:</label>
+        <label htmlFor="username">User:</label>
         <input data-testid="username" id="username" value={currentValue} onChange={handleOnChange} />
         <div data-testid="error" className="alert-danger">{error}</div>
       </div>

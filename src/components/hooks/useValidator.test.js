@@ -15,7 +15,7 @@ test('should dispatch setFormControlErrorMessage when value is empty and rule is
       rule: 'required'
     });
   });
-  expect(useAppContext().dispatch).toHaveBeenCalledWith(
+  expect(useAppContext().dispatch).toHaveBeenCalledWith(expect.objectContaining(
     {
       "type": SET_FORM_CONTROL_ERROR_MESSAGE,
       "item": {
@@ -24,6 +24,6 @@ test('should dispatch setFormControlErrorMessage when value is empty and rule is
         error: 'Please add a message',
         isValid: false
       }
-    }
+    })
   );
 });

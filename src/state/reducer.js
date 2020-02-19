@@ -1,5 +1,6 @@
 import {
-  NEW_MESSAGE, SET_USERNAME,
+  NEW_MESSAGE,
+  SET_USERNAME,
   REACTION_OBJECTS,
   SET_FORM_CONTROL_VALUE,
   SET_FORM_CONTROL_ERROR_MESSAGE
@@ -61,7 +62,6 @@ const reducer = (state, action) => {
         messages: [...state.messages, action.item]
       };
     case SET_USERNAME:
-      console.log('action', action.username);
       return { ...state, username: action.username };
     case SET_FORM_CONTROL_VALUE:
       let { formId, controlId, value } = action.item;

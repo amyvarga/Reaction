@@ -1,50 +1,59 @@
 import React from 'react';
 import SetUserName from '../Username/SetUserName';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useAppContext } from '../hooks/useAppContext';
 import { SET_FORM_CONTROL_VALUE, SET_USERNAME } from '../../state/types';
 
 jest.mock('../hooks/useAppContext');
 
+const controlId = 'username';
+
+const setup = value => {
+  jest.resetAllMocks();
+  const { getByTestId } = render(<SetUserName />);
+  const element = getByTestId('username');
+  fireEvent.change(
+    element,
+    { target: { value } }
+  );
+  return { element };
+};
+
 describe('SetUserName component', () => {
-  it('should dispatch setFormControlValue when input is added', () => {
-    const { getByTestId } = render(<SetUserName />);
-    fireEvent.change(
-      getByTestId('username'),
-      { target: { value: 'Amykin' } }
-    );
-    expect(useAppContext().dispatch).toHaveBeenCalledWith(
-      {
-        "type": SET_FORM_CONTROL_VALUE,
-        'item': {
-          'formId': 'formUsername',
-          'controlId': 'username',
-          'value': 'Amykin',
+  describe('When the input is changed', () => {
+    const value = 'amykin';
+    let controlData;
+
+    beforeEach(() => {
+      controlData = setup(value);
+    });
+
+    it('should dispatch setFormControlValue action ', () => {
+      expect(useAppContext().dispatch).toHaveBeenCalledWith(
+        {
+          "type": SET_FORM_CONTROL_VALUE,
+          'item': {
+            formId: 'formUsername',
+            controlId,
+            value,
+          }
         }
-      }
-    );
+      );
+    });
+
+    it('should dispatch setUsername action', () => {
+      expect(useAppContext().dispatch).toHaveBeenCalledWith(
+        {
+          "type": SET_USERNAME,
+          "username": value
+        }
+      );
+    });
+
   });
 
-  it('should dispatch setUsername when input is added', () => {
-    const { getByTestId } = render(<SetUserName />);
-    fireEvent.change(
-      getByTestId('username'),
-      { target: { value: 'Amy' } }
-    );
-    expect(useAppContext().dispatch).toHaveBeenCalledWith(
-      {
-        "type": SET_USERNAME,
-        "username": "Amy"
-      }
-    );
-  });
-
-  it('should set dispatch setUsername with "anonymous" when input is spaces', () => {
-    const { getByTestId } = render(<SetUserName />);
-    fireEvent.change(
-      getByTestId('username'),
-      { target: { value: '  ' } }
-    );
+  it('should dispatch setUsername with "anonymous" when input is only a space character', () => {
+    setup(' ');
     expect(useAppContext().dispatch).toHaveBeenCalledWith(
       {
         "type": SET_USERNAME,
@@ -53,5 +62,22 @@ describe('SetUserName component', () => {
     );
   });
 
+  it('should trim value passed to setUsername', () => {
+    setup('amy  ');
+    expect(useAppContext().dispatch).toHaveBeenCalledWith(
+      {
+        "type": SET_USERNAME,
+        "username": "amy"
+      }
+    );
+  });
 });
 
+test('should keep a $ in front of the input', () => {
+  render(<SetUserName />);
+  const input = screen.getByLabelText(/User:/i);
+  console.log(input);
+  const myValue = 'amyking';
+  fireEvent.change(input, { target: { value: myValue } });
+  expect(input.value).toEqual(myValue);
+});
