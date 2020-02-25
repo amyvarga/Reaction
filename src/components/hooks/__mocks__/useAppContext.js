@@ -1,5 +1,5 @@
-import defaultInitialState from '../__mocks__/useAppContextInitialState';
+import getAppContext from './getAppContext';
 
 module.exports = {
-  useAppContext: jest.fn(() => (defaultInitialState))
+  useAppContext: jest.fn(() => (getAppContext()))
 };

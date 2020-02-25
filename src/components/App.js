@@ -1,36 +1,45 @@
-import React, { useReducer, useEffect } from 'react';
-import reducer, { initialState } from '../state/reducer';
-import Context from '../context';
-import PublishMessage from './PublishMessage';
-import SetUserName from './Username/SetUserName';
-import MessageBoard from './MessageBoard';
-import PubSub from '../pubsub';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch
+} from 'react-router-dom';
 
-const pubsub = new PubSub();
+import Article from './Article';
+import Home from './Home';
+
+const routes = [
+  {
+    path: '/article',
+    component: Article,
+    exact: true
+  },
+  {
+    path: '/',
+    component: Home,
+    exact: true
+  }
+];
+
 
 function App() {
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-  useEffect(() => {
-    pubsub.addListener({
-      message: messageObject => {
-        const { channel, message } = messageObject;
-        dispatch(message);
-      }
-    });
-  }, []);
-
   return (
-    <Context.Provider value={{ state, dispatch, pubsub }}>
-      <h2>Reaction</h2>
-      <hr />
-      <SetUserName />
-      <hr />
-      <PublishMessage />
-      <hr />
-      <MessageBoard />
-    </Context.Provider>
-  );
+    <Router>
+      <div>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/article">Article</Link></li>
+        </ul>
+        <Switch>
+
+          {routes.map(route =>
+            <Route key={route.path} {...route} />
+          )}
+        </Switch>
+      </div>
+    </Router>
+  )
 }
 
 export default App;

@@ -1,4 +1,4 @@
-const defaultInitialState = {
+export default ({ username = "" } = {}) => ({
   pubsub: jest.fn(),
   dispatch: jest.fn(),
   state: {
@@ -21,12 +21,10 @@ const defaultInitialState = {
       formUsername: {
         username: {
           error: '',
-          currentValue: '',
+          currentValue: username,
           isValid: null
         },
       }
     }
   }
-};
-
-export default defaultInitialState;
+});
