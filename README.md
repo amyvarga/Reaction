@@ -1,6 +1,11 @@
-## Code
+## Objectives
 
-Implements a simple publish–subscribe is a messaging pattern
-Interfaces with Wordpress API for content
-Implements a validation schema for form validation
-Implements testing using React testing library
+Develop a simple React app
+
+Implement a simple publish–subscribe messaging pattern using hooks
+
+Interface with Wordpress API for displaying article content
+
+Implement a validation schema for form validation
+
+Implement testing using React testing library on Jest
